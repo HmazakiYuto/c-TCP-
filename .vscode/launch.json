@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/new.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "C:/Users/y9269/OneDrive/デスクトップ/cstudy",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
+            "preLaunchTask": "build"
+        }
+    ]
+}
+
