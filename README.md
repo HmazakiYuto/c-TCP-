@@ -10,5 +10,5 @@
 ＃＃使用AI
   ・Chatgpt
 
-
+＃＃使用コンパイラ　gcc
 https://github.com/HmazakiYuto/c-TCP-
