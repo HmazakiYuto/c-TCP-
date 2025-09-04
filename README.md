@@ -14,6 +14,6 @@
   ・claude
   
  ##実行環境　Windows11 version24H2 
-＃＃使用コンパイラ　gcc
+＃＃使用コンパイラ　GCC 14.2.0
 
 https://github.com/HmazakiYuto/c-TCP-
