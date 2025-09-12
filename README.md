@@ -1,7 +1,15 @@
+## https://github.com/HmazakiYuto/portforio
+
+#ポートフォリオ
+  某カードゲームをイメージしたデッキメーカー
+  
+
+
+
 ＃C言語練習
 
 ＃＃C言語練習項目　
-  ・windowsapiのたたき方
+  ・windowsapi
   ・構造体ポインタ
   
 ＃＃作成プログラム
@@ -16,4 +24,4 @@
  ##実行環境　Windows11 version24H2 
 ＃＃使用コンパイラ　GCC 14.2.0
 
-https://github.com/HmazakiYuto/c-TCP-
+
