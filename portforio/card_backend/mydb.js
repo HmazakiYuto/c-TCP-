@@ -30,7 +30,7 @@ db.run(`
     card_attack INTEGER,
     card_health INTEGER,
     card_maker INTEGER,
-     FOREIGN KEY (card_maker) REFERENCES users(user_id)
+     FOREIGN KEY (card_maker) REFERENCES user(user_id)
   )
 `);
 
@@ -39,7 +39,7 @@ db.run(`
     deck_id INTEGER  PRIMARY KEY AUTOINCREMENT,
     deck_name TEXT,
     deck_maker INTEGER,
-    FOREIGN KEY (deck_maker) REFERENCES users(user_id)
+    FOREIGN KEY (deck_maker) REFERENCES user(user_id)
   )
 `);
 

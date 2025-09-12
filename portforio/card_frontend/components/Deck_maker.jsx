@@ -1,4 +1,4 @@
-export default function Deck_maker() {
+export default function Deck_maker(user_id) {
   return (
     <div>
       <h2>デッキ登録</h2>

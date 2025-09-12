@@ -9,7 +9,7 @@ export default function User_entry() {
   const [loginPassword, setloginPassword] = useState("");
     
     async function adduser() {
-          
+          if(entryUserName.length>=6&&entryPassword.length>=6){
            try {
                const res = await fetch("http://localhost:3001/user", {
             method: "POST",
@@ -40,6 +40,9 @@ export default function User_entry() {
           console.error(err);
           console.log("せつぞくしっぱい");
         }
+          }else{
+              alert("６文字以上で入力してください");
+          }
       };
     
     //ログイン処理
@@ -79,27 +82,27 @@ export default function User_entry() {
               <tbody>
           <tr>
               <th>ユーザ名</th>
-              <td><input name="name" id="login_user_name" type="text" placeholder="１０文字以内" maxLength={10}  value={loginUserName} onChange={(e) =>setloginUserName(e.target.value)}/></td></tr>
+              <td><input name="name" id="login_user_name" type="text" maxLength={10}  value={loginUserName} onChange={(e) =>setloginUserName(e.target.value)}/></td></tr>
           <tr>
               <th>パスワード</th>
-              <td><input name="password" id="login_password" type="text" placeholder="１０文字以内" maxLength={10} value ={loginPassword} onChange={(e) =>setloginPassword(e.target.value)} /></td>
+              <td><input name="password" id="login_password" type="passward"  maxLength={10} value ={loginPassword} onChange={(e) =>setloginPassword(e.target.value)} /></td>
           </tr>
                                 </tbody>
           </table>
           <button　onClick={loginuser}>ログイン</button>
 
      
-          <h2>ユーザー未登録ならユーザー登録</h2>      <table>
+          <h2>ユーザー登録</h2>      <table>
           <tbody>
       <tr>
         <th>ユーザー名</th>
-          <td><input name="name" id="entry_user_name"type="text" placeholder="１０文字以内" maxLength={10} 
+          <td><input name="name" id="entry_user_name"type="text" placeholder="６文字以上１０文字以内" maxLength={10} min="6"
                   value={entryUserName}
                   onChange={(e) => setEntryUserName(e.target.value)} /></td>
         </tr>
     <tr>
         <th>パスワード</th>
-        <td><input name="entry_passward" type="text" placeholder="１０文字以内" maxLength={10} 
+        <td><input name="entry_passward" type="password" placeholder="６文字以上１０文字以内" maxLength={10} min="6"
                   value={entryPassword}
                   onChange={(e) => setEntryPassword(e.target.value)} /></td>
           </tr>

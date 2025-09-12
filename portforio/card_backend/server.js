@@ -8,12 +8,14 @@ import jwt from "jsonwebtoken"; //ログイン認証
 
 
 const app = express();
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 
 const JWT_SECRET = "secret_key"; // 簡易的な秘密鍵
 
 app.post("/user", async (req, res) => {
+ 
   const { user_name, user_password } = req.body;
 
   db.get( //同じユーザー名は登録済みを返す
@@ -56,27 +58,45 @@ app.post("/login", async (req, res) => {
     const match = await bcrypt.compare(user_password, row.user_password);
     if (!match) return res.status(401).json({ message: "パスワードが違います" });
 
-    const token = jwt.sign({ user_name }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ user_id: row.user_id, user_name: row.user_name },JWT_SECRET , { expiresIn: "1h" });
     res.json({ message: "ログイン成功", token });
   });
 });
 
+// JWT認証ミドルウェア
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+ 
+  if (!token) return res.sendStatus(401);
 
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+     console.log(user);
+    // user = { id: xxx, user_name: "xxx", iat:..., exp:... }
+    req.user = user;
+    next();
+  });
+}
 
+app.get("/get_id", authenticateToken, (req, res) => {
+  // トークンに含まれる user.id を返す
+  res.json({ user_id: req.user.user_id, user_name: req.user.user_name });
+});
 
 // 新しいカードを追加
 app.post("/card", (req, res) => {
-  const { card_name,card_cost,card_attack,card_health  } = req.body;
-     console.log(card_name, card_cost,card_attack, card_health);
+  const { card_name,card_cost,card_attack,card_health ,user_id } = req.body;
+ console.log(req.body);
   db.run(
    
-    "INSERT INTO card (card_name,card_cost,card_attack,card_health ) VALUES (?,?,?,?)",
-    [card_name,card_cost,card_attack,card_health ],
+    "INSERT INTO card (card_name,card_cost,card_attack,card_health,card_maker ) VALUES (?,?,?,?,?)",
+    [card_name,card_cost,card_attack,card_health,user_id ],
     function (err) {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.json({ id: this.lastID, card_name,card_cost,card_attack,card_health  });
+     res.status(201).json({ message: "登録成功", id: this.lastID });
     }
   );
 });
