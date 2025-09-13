@@ -35,7 +35,6 @@ export default function User_entry() {
           setEntryUserName("");
           setEntryPassword("");
 
-          alert("ユーザー登録完了");
         } catch (err) {
           console.error(err);
           console.log("せつぞくしっぱい");

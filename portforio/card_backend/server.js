@@ -68,10 +68,10 @@ function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
  
-  if (!token) return res.sendStatus(401);
+  if (!token) return res.status(401).json({ message: "トークンが必要" });
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) return res.status(403).json({ message: "トークン無効" });
      console.log(user);
     // user = { id: xxx, user_name: "xxx", iat:..., exp:... }
     req.user = user;
