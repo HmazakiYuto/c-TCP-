@@ -7,7 +7,7 @@ export default function Card_maker({ user_id }) {
   const [cardHealth, setCardHealth] = useState("");
 
   async function add_card() {
-     
+    
     try {
       const res = await fetch("http://localhost:3001/card", {
         method: "POST",
@@ -53,10 +53,12 @@ export default function Card_maker({ user_id }) {
             <th>コスト</th>
             <td>
               <input
+                className="card-input"
                 name="card_cost"
                 type="number"
-                maxLength="3"
-                placeholder="ここにコストを入力（99以下）"
+                max="99"
+                min="0"
+                placeholder="コストを入力（99以下）"
                 value={cardCost}
                 onChange={(e) => {
     const value = Number(e.target.value); // 数値に変換
@@ -69,10 +71,11 @@ export default function Card_maker({ user_id }) {
             <th>カード名</th>
             <td>
               <input
+                className="card-input"
                 name="card_name"
                 type="text"
-                maxLength="10"
-                placeholder="ここにカード名を入力（10文字以下）"
+                max="10"
+                placeholder="カード名を入力（10文字以下）"
                 value={cardName}
                 onChange={(e) => setCardName(e.target.value)}
               />
@@ -82,11 +85,12 @@ export default function Card_maker({ user_id }) {
             <th>攻撃力</th>
             <td>
               <input
+                className="card-input"
                 name="card_attack"
                 type="number"
-                maxLength="3"
+                max="99"
                 min="0"
-                placeholder="ここに攻撃力を入力（99以下）"
+                placeholder="攻撃力を入力（99以下）"
                 value={cardAttack}
                   onChange={(e) => {
     const value = Number(e.target.value); // 数値に変換
@@ -99,11 +103,12 @@ export default function Card_maker({ user_id }) {
             <th>体力</th>
             <td>
               <input
+                className="card-input"
                 name="card_health"
                 type="number"
-                maxLength="3"
+                max="99"
                 min="0"
-                placeholder="ここに体力を入力（99以下）"
+                placeholder="体力を入力（99以下）"
                 value={cardHealth}
                 onChange={(e) => {
     const value = Number(e.target.value); // 数値に変換

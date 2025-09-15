@@ -6,8 +6,9 @@ import Deck_display from "/components/Deck_display.jsx";
 
 export default function App() {
   const [page, setPage] = useState("user");
-  const [userId, setUserId] = useState(null); // ← ログイン中のユーザーidをもつ
-
+  const [userId, setUserId] = useState(null); //← ログイン中のユーザーidをもつ
+    const[userName,setUsername] = useState("");
+    
   const check_login = async (target_page) => {
         const res = await fetch("http://localhost:3001/get_id", {
           headers: {
@@ -18,11 +19,14 @@ export default function App() {
             //有効期限切れのトークンを削除
           localStorage.removeItem("token");
           alert("ログインしてください");
+            setPage("user");
+            
           return;
         }
 
         const data = await res.json();
-        console.log("ユーザーID:", data.user_id);
+        console.log("ユーザーID:", data.user_id,data.user_name);
+        setUsername(data.user_name);
         setPage(target_page);
         setUserId(data.user_id);
           };
@@ -30,6 +34,8 @@ export default function App() {
     
 const remove_taken = () =>{
     localStorage.removeItem("token");
+    alert("ログアウトしました");
+     setUsername("");
     setPage("user");
     
     return;
@@ -38,11 +44,20 @@ const remove_taken = () =>{
 
   return (
     <>
-      <button onClick={() => setPage("user")}>ログイン</button> 
-      <button onClick={() => check_login("card")}>カード登録</button>
-      <button onClick={() => check_login("deck_maker")}>デッキ登録</button>
-      <button onClick={() => check_login("deck_display")}>デッキ閲覧</button>
-      <button onClick={() => remove_taken()}>ログアウト</button>
+      <div className = "menu-bar">
+      <button onClick={() => setPage("user")} className={`menu-item ${page === "user" ? "active" : ""}`}>ログイン</button> 
+          
+      <button onClick={() => check_login("card")} className={`menu-item ${page === "card" ? "active" : ""}`}>カード登録</button>
+          
+      <button onClick={() => check_login("deck_maker")} className={`menu-item ${page === "deck_maker" ? "active" : ""}`}>デッキ登録</button>
+          
+      <button onClick={() => check_login("deck_display")}
+          className={`menu-item ${page === "deck_display" ? "active" : ""}`}>デッキ閲覧</button>
+          
+      <button onClick={() => remove_taken()}
+          >ログアウト</button>
+           <p>{userName ? `${userName}でログイン中` : "未ログイン"}</p>
+      </div>
 
       {page === "user" && <User_entry />}
       {page === "card" && <Card_maker user_id={userId} />}

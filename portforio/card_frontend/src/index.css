@@ -27,13 +27,18 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 70vh;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
+textarea{
+    min-width : 200px;
+}
+/*--------ボタン---------*/
 
 button {
   border-radius: 8px;
@@ -65,4 +70,72 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/*--------メニューバー-----*/
+.menu-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 1000;
+}
+
+/* メニューボタン */
+.menu-item {
+  color: white;
+  background: transparent;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.menu-item:hover {
+  background: #555;
+}
+.menu-item.active {
+  background: #007bff;
+  font-weight: bold;
+  border-bottom: 3px solid yellow;
+}
+
+/* ユーザー名を右端に寄せる */
+.menu-bar p {
+  margin-left: auto;  /* ← これで右端に寄せる */
+  font-size: 25px;    /* 3.2m は間違いなので修正 */
+}
+/*------カード登録面-------------*/
+
+.card-input{
+    min-width: 250px;
+}
+
+
+/*-----------デッキ登録画面-------*/
+
+.deck-maker-container {
+  display: flex;
+  width: 100vw;   
+  height: 100vh;  
+}
+
+.card-list,
+.deck {
+  flex: 2; /* 左右を均等に分割 */
+  border: 1px solid #ccc;
+  padding: 8px;
+  overflow-y: auto;   /* 縦スクロール独立 */
+  max-height: 100%;  /* 親要素に合わせる */
+  box-sizing: border-box; /* padding込みで幅調整 */
+}
+.card-row {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* ボタンとテキスト間 */
+  margin-bottom: 4px;
 }
