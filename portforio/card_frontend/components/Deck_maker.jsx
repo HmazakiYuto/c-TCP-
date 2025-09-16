@@ -62,45 +62,48 @@ export default function Deck_maker({ user_id }) {
   };
 
   const registerDeck = async () => {
-    if (!deckName.trim()) return alert("デッキ名を入力してください");
-    if (deck.length === 0) return alert("デッキにカードを追加してください");
-    if (deck.length <40) return alert("デッににはカードが40枚必要です。");
-      if(deck.length===40){
-    try {
-      // 1. deck登録
-      const resDeck = await fetch("http://localhost:3001/deck", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deck_name: deckName, deck_maker: user_id }),
-      });
-      const deckData = await resDeck.json();
-      const deck_id = deckData.deck_id;
+  if (!deckName.trim()) return alert("デッキ名を入力してください");
+  if (deck.length === 0) return alert("デッキにカードを追加してください");
+  if (totalCount < 40) return alert("デッキにはカードが40枚必要です");
 
-      // 2. deck_list登録
-      await fetch("http://localhost:3001/deck_list", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          deck_id,
-          cards: deck.map((c) => ({ card_id: c.card_id, card_count: c.count })),
-        }),
-      });
+  try {
+    // 1. deck登録
+    const resDeck = await fetch("http://localhost:3001/deck", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ deck_name: deckName, deck_maker: user_id }),
+    });
 
-      alert("デッキ登録完了！");
-      setDeck([]);
-      setDeckName("");
-    } catch (err) {
-      console.error(err);
-      alert("接続失敗");
-    }
-      }
-  };
+    if (!resDeck.ok) throw new Error("デッキ登録失敗");
+    const deckData = await resDeck.json();
+    const deck_id = deckData.deck_id || deckData.id; // バックエンド仕様に応じて
+
+    // 2. deck_list登録
+    const resList = await fetch("http://localhost:3001/deck_list", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        deck_id,
+        cards: deck.map((c) => ({ card_id: c.card_id, card_count: c.count })),
+      }),
+    });
+
+    if (!resList.ok) throw new Error("デッキリスト登録失敗");
+
+    alert("デッキ登録完了！");
+    setDeck([]);
+    setDeckName("");
+  } catch (err) {
+    console.error(err);
+    alert("接続失敗");
+  }
+};
 
   return (
     <div className="deck-maker-container">
       {/* 左半分：カードリスト */}
       <div className="card-list">
-        <h2>登録カードリスト</h2>
+       <h2>登録カードリスト</h2>
         <button onClick={getCardLists}>カードリスト表示</button>
         {cards.map((card) => {
           const deckCount = deck.find((c) => c.card_id === card.card_id)?.count || 0;
@@ -117,8 +120,9 @@ export default function Deck_maker({ user_id }) {
 
       {/* 右半分：デッキ */}
       <div className="deck">
-        <h2>デッキ（合計 {totalCount} 枚）</h2>
+        
         {deck.length === 0 && <p>カードを追加してください</p>}
+           <h2>デッキ（合計 {totalCount} 枚）</h2>
           <input
           type="text"
           placeholder="デッキ名を入力"
@@ -126,6 +130,7 @@ export default function Deck_maker({ user_id }) {
           onChange={(e) => setDeckName(e.target.value)}
         />
         <button onClick={registerDeck}>デッキ登録</button>
+         
         {deck.map((card) => (
           <div key={card.card_id} className="card-row">
             <span>{card.card_name} × {card.count}</span>

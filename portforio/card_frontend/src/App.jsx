@@ -15,12 +15,13 @@ export default function App() {
             "Authorization": `Bearer ${localStorage.getItem("token")}`
           }
         });
+      
         if (!res.ok) {  // 401, 403 などのエラー
             //有効期限切れのトークンを削除
           localStorage.removeItem("token");
           alert("ログインしてください");
             setPage("user");
-            
+            setUsername("");
           return;
         }
 
@@ -33,10 +34,15 @@ export default function App() {
     
     
 const remove_taken = () =>{
+   const data = localStorage.getItem("token");
+    if(data){
     localStorage.removeItem("token");
     alert("ログアウトしました");
      setUsername("");
     setPage("user");
+    }else{
+        alert("ログインしていません");
+    }
     
     return;
 }
@@ -46,6 +52,8 @@ const remove_taken = () =>{
     <>
       <div className = "menu-bar">
       <button onClick={() => setPage("user")} className={`menu-item ${page === "user" ? "active" : ""}`}>ログイン</button> 
+          
+ 
           
       <button onClick={() => check_login("card")} className={`menu-item ${page === "card" ? "active" : ""}`}>カード登録</button>
           
@@ -58,11 +66,12 @@ const remove_taken = () =>{
           >ログアウト</button>
            <p>{userName ? `${userName}でログイン中` : "未ログイン"}</p>
       </div>
-
-      {page === "user" && <User_entry />}
+      <div className ="contents">
+      {page === "user" && <User_entry Check_login={check_login} />}
       {page === "card" && <Card_maker user_id={userId} />}
       {page === "deck_maker" && <Deck_maker user_id={userId} />}
       {page === "deck_display" && <Deck_display user_id={userId} />}
+      </div>
     </>
   );
 }

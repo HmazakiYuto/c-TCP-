@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function User_entry() {
+export default function User_entry({Check_login}) {
     
     
   const [entryUserName, setEntryUserName] = useState("");
@@ -64,6 +64,7 @@ export default function User_entry() {
             // 登録成功したら入力欄を空に戻す
         setloginUserName("");
         setloginPassword("");
+           Check_login("user");
       alert("ログイン成功");
     } catch (err) {
       console.error(err);

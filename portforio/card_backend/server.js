@@ -81,7 +81,7 @@ console.log("受け取った user_id:", user_id, typeof user_id);
 });
 
 
-
+//get（sql,params,callback）
 
 app.post("/login", async (req, res) => {
    const { user_name, user_password } = req.body;
@@ -129,6 +129,43 @@ app.post("/deck_list", (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+app.post("/deck_display", (req, res) => {
+  const { user_id } = req.body;
+
+  db.all(
+    `SELECT d.deck_id, d.deck_name, d.deck_maker,
+            dl.card_id, dl.card_count, c.card_name
+     FROM deck d
+     JOIN deck_list dl ON d.deck_id = dl.deck_id
+     JOIN card c ON dl.card_id = c.card_id
+     WHERE d.deck_maker = ?`,
+    [user_id],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      const grouped = {};
+      for (const row of rows) {
+        if (!grouped[row.deck_id]) {
+          grouped[row.deck_id] = {
+            deck_id: row.deck_id,
+            deck_name: row.deck_name,
+            deck_maker: row.deck_maker,
+            cards: [],
+          };
+        }
+        grouped[row.deck_id].cards.push({
+          card_id: row.card_id,
+          card_name: row.card_name,
+          card_count: row.card_count,
+        });
+      }
+
+      res.json(Object.values(grouped));
+    }
+  );
+});
+
 
 
 

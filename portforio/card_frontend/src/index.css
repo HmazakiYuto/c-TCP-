@@ -27,7 +27,7 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 70vh;
+  min-height: 50vh;
 }
 
 h1 {
@@ -37,6 +37,9 @@ h1 {
 
 textarea{
     min-width : 200px;
+}
+.contents{
+    padding-top: 50px;
 }
 /*--------ボタン---------*/
 
@@ -107,7 +110,7 @@ button:focus-visible {
 /* ユーザー名を右端に寄せる */
 .menu-bar p {
   margin-left: auto;  /* ← これで右端に寄せる */
-  font-size: 25px;    /* 3.2m は間違いなので修正 */
+  font-size: 25px;    
 }
 /*------カード登録面-------------*/
 
