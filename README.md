@@ -35,7 +35,7 @@ npm run dev
 ### 3 .バックエンドのセットアップ
 cd card_backend
 npm install
-node index.js
+node server.js
 
 ### 4 . dbの初期化
 sqlite3 card.db < init.sql
