@@ -20,6 +20,27 @@ export default function Deck_display({ user_id }) {
     setDecks(data);
   };
 
+const editDeck = async() =>{
+    
+    
+}
+
+const removeDeck = async(deck_id) =>{
+     const res = await fetch("http://localhost:3001/deck_remove", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ deck_id })
+    });
+
+    if (!res.ok) {
+      console.error("デッキ削除失敗");
+      return;
+    }
+
+    alert("デッキを削除しました。");
+    getDecks();
+}
+
   useEffect(() => {
     if (user_id) {
       getDecks();
@@ -34,7 +55,8 @@ export default function Deck_display({ user_id }) {
       {decks.map((deck) => (
         <div key={deck.deck_id} className="deck-card">
           <h3>{deck.deck_name}</h3>
-          <p>作成者ID: {deck.deck_maker}</p>
+                  <button onClick={() =>editDeck()}>編集</button>
+            <button onClick={() =>removeDeck(deck.deck_id)}>削除</button>
 
           <ul>
             {deck.cards.map((card) => (

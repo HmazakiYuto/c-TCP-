@@ -36,6 +36,7 @@ export default function Deck_maker({ user_id }) {
           return prevDeck;
         }
       } else {
+          //cardを展開し、countプロパティを持たせる
         return [...prevDeck, { ...card, count: 1 }];
       }
     });
@@ -46,6 +47,7 @@ export default function Deck_maker({ user_id }) {
 
     setDeck((prevDeck) =>
       prevDeck.map((c) =>
+                   //引数のcardと同じカードのcountを増やす
         c.card_id === card.card_id ? { ...c, count: Math.min(c.count + 1, 3) } : c
       )
     );
@@ -61,7 +63,9 @@ export default function Deck_maker({ user_id }) {
     );
   };
 
+    //デッキを登録
   const registerDeck = async () => {
+      //空白は取り除く
   if (!deckName.trim()) return alert("デッキ名を入力してください");
   if (deck.length === 0) return alert("デッキにカードを追加してください");
   if (totalCount < 40) return alert("デッキにはカードが40枚必要です");
@@ -101,7 +105,7 @@ export default function Deck_maker({ user_id }) {
 
   return (
     <div className="deck-maker-container">
-      {/* 左半分：カードリスト */}
+     
       <div className="card-list">
        <h2>登録カードリスト</h2>
         <button onClick={getCardLists}>カードリスト表示</button>
@@ -118,13 +122,14 @@ export default function Deck_maker({ user_id }) {
         })}
       </div>
 
-      {/* 右半分：デッキ */}
+    
       <div className="deck">
         
         {deck.length === 0 && <p>カードを追加してください</p>}
            <h2>デッキ（合計 {totalCount} 枚）</h2>
           <input
           type="text"
+        　maxLength="10"
           placeholder="デッキ名を入力"
           value={deckName}
           onChange={(e) => setDeckName(e.target.value)}

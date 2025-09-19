@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 export default function Card_maker({ user_id }) {
   const [cardCost, setCardCost] = useState("");
   const [cardName, setCardName] = useState("");
   const [cardAttack, setCardAttack] = useState("");
   const [cardHealth, setCardHealth] = useState("");
+  const [cards, setCards] = useState([]);
 
-  async function add_card() {
+
+async function add_card() {
     // 入力チェック
     if (!cardName.trim()) {
       alert("カード名を入力してください");
@@ -49,8 +51,54 @@ export default function Card_maker({ user_id }) {
     }
   }
 
+    
+   
+async function fetchCards() {
+  try {
+    const res = await fetch("http://localhost:3001/cards", { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id }),
+    });
+    if (!res.ok) {
+      console.error("カード取得失敗");
+      return;
+    }
+    const data = await res.json();
+    setCards(data); 
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+    
+async function removeCard(card_id){
+    const res = await   fetch("http://localhost:3001/remove_card",
+    {
+    method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ card_id })                       
+     });
+      
+    if (!res.ok) {
+      console.error("カードの削除失敗");
+      return;
+    }
+
+    const data = await res.json();
+     fetchCards(); 
+    }
+    
+    
+    useEffect(() =>{
+        if (user_id) {
+      fetchCards();
+    }
+    },[]);
+    
   return (
-    <div>
+    <div className="card-maker-container">
+          <div className="cardEntry">
       <h2>カード登録</h2>
       <table>
         <tbody>
@@ -116,7 +164,25 @@ export default function Card_maker({ user_id }) {
         </tbody>
       </table>
       <button onClick={add_card}>登録</button>
+          </div>
+    <div className="cardMakerList">      
+         
+      <h2>登録カードリスト</h2>
+      {cards.length === 0 ? (
+        <p>カードがありません</p>
+      ) : (
+        <ul>
+          {cards.map((card) => (
+            <li key={card.card_id}>
+              {card.card_name} (コスト: {card.card_cost}, 攻撃力: {card.card_attack}, 体力: {card.card_health})
+            <button onClick={()=>removeCard(card.card_id)}>削除</button>
+            </li>
+          ))}
+        </ul>
+      )}
+          </div>
     </div>
+     
   );
 }
 

@@ -119,6 +119,22 @@ button:focus-visible {
 }
 
 
+.card-maker-container {
+  display: flex;
+  width: 100vw;   
+  height: 100vh;  
+}
+
+.cardEntry,
+.cardMakerList {
+  flex: 2; /* 左右を均等に分割 */
+  border: 1px solid #ccc;
+  padding: 8px;
+  overflow-y: auto;   /* 縦スクロール独立 */
+  max-height: 100%;  /* 親要素に合わせる */
+  box-sizing: border-box; /* padding込みで幅調整 */
+}
+
 /*-----------デッキ登録画面-------*/
 
 .deck-maker-container {

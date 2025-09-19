@@ -80,6 +80,31 @@ console.log("受け取った user_id:", user_id, typeof user_id);
   });
 });
 
+app.post("/remove_card", (req, res) => {
+  const { card_id } = req.body;
+
+  if (!card_id) {
+    return res.status(400).json({ message: "card_id が必要です" });
+  }
+
+  // カード削除SQL
+  db.run("DELETE FROM card WHERE card_id = ?", [card_id], function (err) {
+    if (err) {
+      console.error("カード削除エラー:", err.message);
+      return res.status(500).json({ message: "カード削除に失敗しました" });
+    }
+
+    if (this.changes === 0) {
+      // 該当する card_id がない場合
+      return res.status(404).json({ message: "カードが見つかりません" });
+    }
+
+    console.log(`カード削除成功: card_id=${card_id}`);
+    res.json({ message: "カードを削除しました" });
+  });
+});
+
+
 
 //get（sql,params,callback）
 
@@ -98,7 +123,7 @@ app.post("/login", async (req, res) => {
   });
 });
 
-// 1. deck テーブル登録
+// deck テーブル登録
 app.post("/deck", (req, res) => {
   const { deck_name, deck_maker } = req.body;
   db.run(
@@ -111,7 +136,7 @@ app.post("/deck", (req, res) => {
   );
 });
 
-// 2. deck_list テーブル登録
+//  deck_list テーブル登録
 app.post("/deck_list", (req, res) => {
   const { deck_id, cards } = req.body; // cards: [{ card_id, card_count }, ...]
 
@@ -128,6 +153,22 @@ app.post("/deck_list", (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+});
+
+app.post("/deck_remove", (req, res) => {
+  const { deck_id } = req.body; 
+
+  db.run(
+  "DELETE FROM deck_list WHERE deck_id = ?",
+   [deck_id], function (err) {
+      if (err) return res.status(500).json({ message: err.message });
+    }
+  );
+  db.run(
+    "DELETE FROM deck WHERE deck_id = ?",
+    [deck_id], function (err) {if (err) return res.status(500).json({ message: err.message });
+    });
+  res.status(200).json({ message: "デッキ削除完了" });
 });
 
 app.post("/deck_display", (req, res) => {
@@ -179,7 +220,7 @@ function authenticateToken(req, res, next) {
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: "トークン無効" });
      console.log(user);
-    // user = { id: xxx, user_name: "xxx", iat:..., exp:... }
+    
     req.user = user;
     next();
   });
